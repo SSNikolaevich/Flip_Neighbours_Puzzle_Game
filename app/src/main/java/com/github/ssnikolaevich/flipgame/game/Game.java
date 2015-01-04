@@ -3,9 +3,11 @@ import java.util.*;
 
 public class Game {
 	private Layout mLayout;
+    private OnTileFlipListener onTileFlipListener;
 	
 	public Game(int columns, int rows) {
 		mLayout = new Layout(columns, rows);
+        onTileFlipListener = null;
 		initLayout();
 	}
 	
@@ -24,7 +26,7 @@ public class Game {
 		for (int i = 0; (i < flipsCount) || isOver(); ++i) {
 			int column = random.nextInt(columns);
 			int row = random.nextInt(rows);
-			flip(column, row);
+			makeMove(column, row);
 		}
 	}
 	
@@ -68,10 +70,13 @@ public class Game {
 	}
 	
 	private void flipTile(int column, int row) {
-		mLayout.getTile(column, row).flip();
+        Tile tile = mLayout.getTile(column, row);
+        tile.flip();
+        if (onTileFlipListener != null)
+            onTileFlipListener.onFlip(this, column, row);
 	}
 	
-	public void flip(int column, int row) {
+	public void makeMove(int column, int row) {
 		Tile tile = mLayout.getTile(column, row);
 		Value value = tile.getVisibleValue();
 		int columns = mLayout.getColumns();
@@ -103,4 +108,12 @@ public class Game {
 			}
 		}
 	}
+
+    public void setOnTileFlipListener(OnTileFlipListener listener) {
+        onTileFlipListener = listener;
+    }
+
+    public interface OnTileFlipListener {
+        public void onFlip(Game game, int column, int row);
+    }
 }

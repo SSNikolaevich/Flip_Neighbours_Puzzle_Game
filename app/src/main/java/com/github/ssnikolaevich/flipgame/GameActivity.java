@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.ViewFlipper;
+
 import com.github.ssnikolaevich.flipgame.game.Game;
+import com.github.ssnikolaevich.flipgame.game.Tile;
 
 public class GameActivity extends Activity {
     public final static String EXTRA_COLUMNS_COUNT = "com.github.ssnikolaevich.flipgame.COLUMNS_COUNT";
@@ -40,6 +43,21 @@ public class GameActivity extends Activity {
         game = new Game(columnsCount, rowsCount);
     }
 
+    private class TileOnClickListener implements View.OnClickListener {
+        private int column;
+        private int row;
+
+        public TileOnClickListener(int column, int row) {
+            this.column = column;
+            this.row = row;
+        }
+
+        @Override
+        public void onClick(View view) {
+            game.makeMove(column, row);
+        }
+    }
+
     protected void initGameView() {
         final int columnsCount = game.getColumns();
         final int rowsCount = game.getRows();
@@ -49,12 +67,22 @@ public class GameActivity extends Activity {
         gridLayout.setRowCount(rowsCount);
 
         TileViewFactory tileViewFactory = new TileViewFactory(this);
-        for (int c = 0; c < columnsCount; ++c) {
-            for (int r = 0; r < rowsCount; ++r) {
+        for (int r = 0; r < rowsCount; ++r) {
+            for (int c = 0; c < columnsCount; ++c) {
                 View view = tileViewFactory.create(game.getTile(c, r));
+                view.setOnClickListener(new TileOnClickListener(c, r));
                 gridLayout.addView(view);
             }
         }
+
+        game.setOnTileFlipListener(new Game.OnTileFlipListener() {
+            @Override
+            public void onFlip(Game game, int column, int row) {
+                ViewFlipper view =
+                        (ViewFlipper) gridLayout.getChildAt(game.getColumns() * row + column);
+                view.showNext();
+            }
+        });
 
         RelativeLayout gameLayout = (RelativeLayout) findViewById(R.id.gameLayout);
         gameLayout.addOnLayoutChangeListener(

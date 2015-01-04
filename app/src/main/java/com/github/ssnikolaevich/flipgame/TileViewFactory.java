@@ -37,12 +37,6 @@ public class TileViewFactory {
         if (tile.getVisibleSide() == Tile.BACK)
             viewFlipper.showNext();
 
-        viewFlipper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                viewFlipper.showNext();
-            }
-        });
         return viewFlipper;
     }
 }
