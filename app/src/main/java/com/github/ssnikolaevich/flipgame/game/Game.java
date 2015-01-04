@@ -33,10 +33,12 @@ public class Game {
 		if (random.nextFloat() < 0.2f) {
             value.setOther(true);
 		} else {
-            value.setLeft(random.nextFloat() < 0.25f);
-            value.setRight(random.nextFloat() < 0.25f);
-            value.setTop(random.nextFloat() < 0.25f);
-            value.setBottom(random.nextFloat() < 0.25f);
+            while (value.empty()) {
+                value.setLeft(random.nextFloat() < 0.25f);
+                value.setRight(random.nextFloat() < 0.25f);
+                value.setTop(random.nextFloat() < 0.25f);
+                value.setBottom(random.nextFloat() < 0.25f);
+            }
 		}
         return value;
 	}

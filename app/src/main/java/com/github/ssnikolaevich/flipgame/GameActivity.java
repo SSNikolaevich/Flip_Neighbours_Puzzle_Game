@@ -8,18 +8,17 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ViewFlipper;
-import android.graphics.Color;
-
+import com.github.ssnikolaevich.flipgame.game.Game;
 
 public class GameActivity extends Activity {
     public final static String EXTRA_COLUMNS_COUNT = "com.github.ssnikolaevich.flipgame.COLUMNS_COUNT";
     public final static String EXTRA_ROWS_COUNT = "com.github.ssnikolaevich.flipgame.ROWS_COUNT";
 
-    public final int DEFAULT_COLUMNS = 5;
-    public final int DEFAULT_ROWS = 5;
+    public final int DEFAULT_COLUMNS = 4;
+    public final int DEFAULT_ROWS = 4;
+
+    private Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +28,21 @@ public class GameActivity extends Activity {
     }
 
     protected void init() {
+        initGame();
+        initGameView();
+    }
+
+    protected void initGame() {
         Intent intent = getIntent();
         final int columnsCount = intent.getIntExtra(EXTRA_COLUMNS_COUNT, DEFAULT_COLUMNS);
         final int rowsCount = intent.getIntExtra(EXTRA_ROWS_COUNT, DEFAULT_ROWS);
+
+        game = new Game(columnsCount, rowsCount);
+    }
+
+    protected void initGameView() {
+        final int columnsCount = game.getColumns();
+        final int rowsCount = game.getRows();
 
         final GridLayout gridLayout = (GridLayout) findViewById(R.id.gameGrid);
         gridLayout.setColumnCount(columnsCount);
@@ -40,7 +51,7 @@ public class GameActivity extends Activity {
         TileViewFactory tileViewFactory = new TileViewFactory(this);
         for (int c = 0; c < columnsCount; ++c) {
             for (int r = 0; r < rowsCount; ++r) {
-                View view = tileViewFactory.create();
+                View view = tileViewFactory.create(game.getTile(c, r));
                 gridLayout.addView(view);
             }
         }
@@ -49,23 +60,25 @@ public class GameActivity extends Activity {
         gameLayout.addOnLayoutChangeListener(
                 new View.OnLayoutChangeListener() {
                     @Override
-                    public void onLayoutChange(View view, int l, int t, int r, int b, int ol, int ot, int or, int ob) {
-                        int tileSize = (r - l) / columnsCount;
+                    public void onLayoutChange(
+                            View view,
+                            int left, int top, int right, int bottom,
+                            int oldLeft, int oldTop, int oldRight, int oldBottom
+                    ) {
+                        int tileSize = (right - left) / columnsCount;
 
                         for (int i = 0; i < gridLayout.getChildCount(); ++i) {
                             View child = gridLayout.getChildAt(i);
-                            GridLayout.LayoutParams params = (GridLayout.LayoutParams) child.getLayoutParams();
+                            GridLayout.LayoutParams params =
+                                    (GridLayout.LayoutParams) child.getLayoutParams();
                             params.width = tileSize;
                             params.height = tileSize;
                             child.setLayoutParams(params);
                         }
                         Log.d("GameActivity", "Tile size: " + tileSize);
-                        if (tileSize > 0)
-                            view.removeOnLayoutChangeListener(this);
                     }
                 }
         );
-
     }
 
     @Override

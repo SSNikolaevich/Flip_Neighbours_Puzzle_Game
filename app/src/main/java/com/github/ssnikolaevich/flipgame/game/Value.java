@@ -35,6 +35,8 @@ public class Value {
         return mOther;
     }
 
+    public boolean empty() { return !(mOther || mTop || mBottom || mLeft || mRight); }
+
     public void setLeft(boolean left) {
         mLeft = left;
         if (left) {
