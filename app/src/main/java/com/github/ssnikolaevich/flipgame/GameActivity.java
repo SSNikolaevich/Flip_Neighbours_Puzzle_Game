@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
 import android.widget.ViewFlipper;
-
 import com.github.ssnikolaevich.flipgame.game.Game;
-import com.github.ssnikolaevich.flipgame.game.Tile;
 
 public class GameActivity extends Activity {
     public final static String EXTRA_COLUMNS_COUNT = "com.github.ssnikolaevich.flipgame.COLUMNS_COUNT";
