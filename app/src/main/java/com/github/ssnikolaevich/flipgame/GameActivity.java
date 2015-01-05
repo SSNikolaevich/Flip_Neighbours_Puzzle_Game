@@ -117,6 +117,25 @@ public class GameActivity extends Activity {
         initGameView();
     }
 
+    public void showHelp(View view) {
+        // TODO
+    }
+
+    public void onShare(View view) {
+        shareIt();
+    }
+
+    protected void shareIt() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String msgSubject = getString(R.string.share_msg_subject);
+        String msgText = getString(R.string.share_msg_text);
+        String shareCaption = getString(R.string.share_via);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, msgSubject);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msgText);
+        startActivity(Intent.createChooser(sharingIntent, shareCaption));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Flip Neighbours Puzzle Game</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Flip The Neighbours Puzzle Game</string>
+    <string name="share">Share</string>
+    <string name="share_via">Share via</string>
+    <string name="reset">Reset</string>
+    <string name="help">Help</string>
+    <string name="share_msg_subject"></string>
+    <string name="share_msg_text"></string>
     <string name="action_settings">Settings</string>
 
 </resources>
