@@ -65,6 +65,7 @@ public class GameActivity extends Activity {
         final GridLayout gridLayout = (GridLayout) findViewById(R.id.gameGrid);
         gridLayout.setColumnCount(columnsCount);
         gridLayout.setRowCount(rowsCount);
+        gridLayout.removeAllViews();
 
         TileViewFactory tileViewFactory = new TileViewFactory(this);
         for (int r = 0; r < rowsCount; ++r) {
@@ -109,6 +110,11 @@ public class GameActivity extends Activity {
                     }
                 }
         );
+    }
+
+    public void resetGame(View view) {
+        initGame();
+        initGameView();
     }
 
     @Override

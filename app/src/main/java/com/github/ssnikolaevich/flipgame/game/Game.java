@@ -10,7 +10,7 @@ public class Game {
         onTileFlipListener = null;
 		initLayout();
 	}
-	
+
 	private void initLayout() {
 		int columns = mLayout.getColumns();
 		int rows = mLayout.getRows();
