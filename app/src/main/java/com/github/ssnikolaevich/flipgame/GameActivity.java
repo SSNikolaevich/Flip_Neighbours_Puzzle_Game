@@ -96,7 +96,7 @@ public class GameActivity extends Activity {
                         int tileSize = (right - left) / columnsCount;
 
                         for (int i = 0; i < gridLayout.getChildCount(); ++i) {
-                            View child = gridLayout.getChildAt(i);
+                            ViewFlipper child = (ViewFlipper) gridLayout.getChildAt(i);
                             GridLayout.LayoutParams params =
                                     (GridLayout.LayoutParams) child.getLayoutParams();
                             params.width = tileSize;
@@ -104,6 +104,8 @@ public class GameActivity extends Activity {
                             child.setLayoutParams(params);
                         }
                         Log.d("GameActivity", "Tile size: " + tileSize);
+                        if (tileSize > 0)
+                            view.removeOnLayoutChangeListener(this);
                     }
                 }
         );
