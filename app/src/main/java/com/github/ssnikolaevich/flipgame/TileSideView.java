@@ -15,9 +15,9 @@ public class TileSideView extends View {
     private Value value;
     private boolean isFront;
 
-    private final static int BACKGROUND_COLOR = Color.rgb(220, 220, 220);
-    private final static int FRONT_COLOR = Color.rgb(170, 255, 170);
-    private final static int BACK_COLOR = Color.rgb(255, 170, 170);
+    private final static int BACKGROUND_COLOR = Color.argb(0, 255, 255, 255);
+    private final static int FRONT_COLOR = Color.rgb(115, 210, 22);
+    private final static int BACK_COLOR = Color.rgb(245, 121, 0);
     private final static int VALUE_COLOR = Color.rgb(255, 255, 255);
     private final static int SHADOW_COLOR = Color.argb(64, 0, 0, 0);
 
@@ -83,8 +83,8 @@ public class TileSideView extends View {
     private void drawTile(Canvas canvas, Paint paint) {
         final int w = getWidth();
         final int h = getHeight();
-        final float r = Math.min(w, h) / 10.0f;
-        final float r2 = r / 4;
+        final float r = Math.min(w, h) / 5.0f;
+        final float r2 = r / 8;
 
         // Shadow
         RectF rect = new RectF(
