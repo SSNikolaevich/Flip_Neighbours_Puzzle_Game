@@ -1,59 +1,102 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/gameLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="com.example.sergey.myapplication.GameActivity"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <RelativeLayout
+        android:id="@+id/gameView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/resetTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:onClick="resetGame"
+                android:text="@string/reset"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/helpTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:onClick="showHelp"
+                android:text="@string/help"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <GridLayout
+            android:id="@+id/gameGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:stretchMode="columnWidth" />
 
         <TextView
+            android:id="@+id/shareTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/reset"
-            android:id="@+id/resetTextView"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:clickable="true"
-            android:onClick="resetGame"/>
+            android:onClick="onShare"
+            android:text="@string/share"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
 
-        <TextView
+    <RelativeLayout
+        android:id="@+id/endGameView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/help"
-            android:id="@+id/helpTextView"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:clickable="true"
-            android:onClick="showHelp"/>
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/you_win"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
-    <GridLayout
-        android:id="@+id/gameGrid"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchMode="columnWidth"
+        android:layout_height="match_parent"
+        android:id="@+id/helpView"
         android:layout_gravity="center"
-        android:layout_centerInParent="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/share"
-        android:id="@+id/shareTextView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_launcher"
         android:clickable="true"
-        android:onClick="onShare"/>
-</RelativeLayout>
+        android:onClick="closeHelp"/>
+
+</FrameLayout>

@@ -1,5 +1,7 @@
 package com.github.ssnikolaevich.flipgame;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +23,23 @@ public class GameActivity extends Activity {
 
     private Game game;
 
+    private View mGameView;
+    private View mEndGameView;
+    private View mHelpView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        mGameView = findViewById(R.id.gameView);
+
+        mEndGameView = findViewById(R.id.endGameView);
+        mEndGameView.setVisibility(View.GONE);
+
+        mHelpView = findViewById(R.id.helpView);
+        mHelpView.setVisibility(View.GONE);
+
         init();
     }
 
@@ -60,17 +75,17 @@ public class GameActivity extends Activity {
         final int columnsCount = game.getColumns();
         final int rowsCount = game.getRows();
 
-        final GridLayout gridLayout = (GridLayout) findViewById(R.id.gameGrid);
-        gridLayout.setColumnCount(columnsCount);
-        gridLayout.setRowCount(rowsCount);
-        gridLayout.removeAllViews();
+        final GridLayout gameGrid = (GridLayout) findViewById(R.id.gameGrid);
+        gameGrid.setColumnCount(columnsCount);
+        gameGrid.setRowCount(rowsCount);
+        gameGrid.removeAllViews();
 
         TileViewFactory tileViewFactory = new TileViewFactory(this);
         for (int r = 0; r < rowsCount; ++r) {
             for (int c = 0; c < columnsCount; ++c) {
                 View view = tileViewFactory.create(game.getTile(c, r));
                 view.setOnClickListener(new TileOnClickListener(c, r));
-                gridLayout.addView(view);
+                gameGrid.addView(view);
             }
         }
 
@@ -78,13 +93,12 @@ public class GameActivity extends Activity {
             @Override
             public void onFlip(Game game, int column, int row) {
                 ViewFlipper view =
-                        (ViewFlipper) gridLayout.getChildAt(game.getColumns() * row + column);
+                        (ViewFlipper) gameGrid.getChildAt(game.getColumns() * row + column);
                 view.showNext();
             }
         });
 
-        RelativeLayout gameLayout = (RelativeLayout) findViewById(R.id.gameLayout);
-        gameLayout.addOnLayoutChangeListener(
+        mGameView.addOnLayoutChangeListener(
                 new View.OnLayoutChangeListener() {
                     @Override
                     public void onLayoutChange(
@@ -94,8 +108,8 @@ public class GameActivity extends Activity {
                     ) {
                         int tileSize = (right - left) / columnsCount;
 
-                        for (int i = 0; i < gridLayout.getChildCount(); ++i) {
-                            ViewFlipper child = (ViewFlipper) gridLayout.getChildAt(i);
+                        for (int i = 0; i < gameGrid.getChildCount(); ++i) {
+                            View child = gameGrid.getChildAt(i);
                             GridLayout.LayoutParams params =
                                     (GridLayout.LayoutParams) child.getLayoutParams();
                             params.width = tileSize;
@@ -116,7 +130,61 @@ public class GameActivity extends Activity {
     }
 
     public void showHelp(View view) {
-        // TODO
+        mHelpView.setAlpha(0f);
+        mHelpView.setScaleX(2.0f);
+        mHelpView.setScaleY(2.0f);
+        mHelpView.setVisibility(View.VISIBLE);
+
+        mHelpView.animate()
+                .alpha(1.0f)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(250)
+                .setListener(null);
+
+        mGameView.animate()
+                .alpha(0f)
+                .scaleX(0.5f)
+                .scaleY(0.5f)
+                .setDuration(250)
+                .setListener(
+                        new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mGameView.setVisibility(View.GONE);
+                            }
+                        }
+                );
+    }
+
+    public void closeHelp(View view) {
+        mGameView.setAlpha(0f);
+        mGameView.setScaleX(0.5f);
+        mGameView.setScaleY(0.5f);
+        mGameView.setVisibility(View.VISIBLE);
+
+        mGameView.animate()
+                .alpha(1.0f)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(250)
+                .setListener(null);
+
+        mHelpView.animate()
+                .alpha(0f)
+                .scaleX(2.0f)
+                .scaleY(2.0f)
+                .setDuration(250)
+                .setListener(
+                        new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mHelpView.setVisibility(View.GONE);
+                            }
+                        }
+                );
     }
 
     public void onShare(View view) {
