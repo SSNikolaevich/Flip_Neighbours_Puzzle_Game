@@ -5,12 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.widget.GridLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.github.ssnikolaevich.flipgame.game.Game;
@@ -54,15 +51,15 @@ public class GameActivity extends Activity {
     }
 
     protected void init() {
-        initGame();
-        initGameView();
-    }
-
-    protected void initGame() {
         Intent intent = getIntent();
         final int columnsCount = intent.getIntExtra(EXTRA_COLUMNS_COUNT, DEFAULT_COLUMNS);
         final int rowsCount = intent.getIntExtra(EXTRA_ROWS_COUNT, DEFAULT_ROWS);
 
+        initGame(columnsCount, rowsCount);
+        initGameView();
+    }
+
+    protected void initGame(int columnsCount, int rowsCount) {
         game = new Game(columnsCount, rowsCount);
     }
 
@@ -192,7 +189,7 @@ public class GameActivity extends Activity {
                             }
                         }
                 );
-        initGame();
+        initGame(columnsCount, rowsCount);
         initGameView();
     }
 
