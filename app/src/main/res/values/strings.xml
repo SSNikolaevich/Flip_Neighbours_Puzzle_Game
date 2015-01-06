@@ -8,6 +8,8 @@
     <string name="help">Help</string>
     <string name="share_msg_subject"></string>
     <string name="share_msg_text"></string>
+    <string name="congratulations">CONGRATULATIONS!</string>
     <string name="you_win">You win!</string>
+    <string name="next_game">Next game:</string>
 
 </resources>

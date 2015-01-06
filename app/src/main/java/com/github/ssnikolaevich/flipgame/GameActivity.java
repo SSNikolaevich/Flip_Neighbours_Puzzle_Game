@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.github.ssnikolaevich.flipgame.game.Game;
 
@@ -28,6 +29,9 @@ public class GameActivity extends Activity {
     private View mHelpView;
     private GridLayout mGameGrid;
 
+    private TextView mSameSizeTextView;
+    private TextView mNextSizeTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,9 @@ public class GameActivity extends Activity {
         mHelpView.setVisibility(View.GONE);
 
         mGameGrid = (GridLayout) findViewById(R.id.gameGrid);
+
+        mSameSizeTextView = (TextView) findViewById(R.id.sameSizeTextView);
+        mNextSizeTextView = (TextView) findViewById(R.id.nextSizeTextView);
 
         init();
     }
@@ -71,6 +78,9 @@ public class GameActivity extends Activity {
         @Override
         public void onClick(View view) {
             game.makeMove(column, row);
+            if (game.isOver()) {
+                onGameOver();
+            }
         }
     }
 
@@ -126,7 +136,40 @@ public class GameActivity extends Activity {
         );
     }
 
-    public void resetGame(View view) {
+    public void startSameSizeGame(View view) {
+        animateNewGame();
+        resetGame(game.getColumns(), game.getRows());
+    }
+
+    public void startNextSizeGame(View view) {
+        animateNewGame();
+        resetGame(game.getColumns() + 1, game.getRows() + 1);
+    }
+
+    private void animateNewGame() {
+        mEndGameView.animate()
+                .alpha(0f)
+                .scaleX(2.0f)
+                .scaleY(2.0f)
+                .rotation(-180.0f)
+                .setDuration(250)
+                .setListener(
+                        new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mEndGameView.setRotation(0.0f);
+                                mEndGameView.setVisibility(View.GONE);
+                            }
+                        }
+                );
+    }
+
+    public void onResetGame(View view) {
+        resetGame(game.getColumns(), game.getRows());
+    }
+
+    public void resetGame(int columnsCount, int rowsCount) {
         mGameGrid.animate()
                 .alpha(0.0f)
                 .rotation(90.0f)
@@ -151,6 +194,25 @@ public class GameActivity extends Activity {
                 );
         initGame();
         initGameView();
+    }
+
+    protected void onGameOver() {
+        final int columnsCount = game.getColumns();
+        final int rowsCount = game.getRows();
+        mSameSizeTextView.setText(columnsCount + " x " + rowsCount);
+        mNextSizeTextView.setText((columnsCount + 1) + " x " + (rowsCount + 1));
+
+        mEndGameView.setAlpha(0f);
+        mEndGameView.setScaleX(2.0f);
+        mEndGameView.setScaleY(2.0f);
+        mEndGameView.setVisibility(View.VISIBLE);
+
+        mEndGameView.animate()
+                .alpha(1.0f)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(250)
+                .setListener(null);
     }
 
     public void showHelp(View view) {
