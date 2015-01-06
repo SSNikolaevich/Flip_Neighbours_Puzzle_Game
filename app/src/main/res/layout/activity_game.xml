@@ -86,8 +86,8 @@
                 android:textStyle="bold" />
 
             <Space
-                android:layout_width="20px"
-                android:layout_height="64px"
+                android:layout_width="20dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center" />
 
             <TextView
@@ -99,8 +99,8 @@
                 android:textStyle="bold" />
 
             <Space
-                android:layout_width="20px"
-                android:layout_height="64px"
+                android:layout_width="20dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center" />
 
             <TextView
@@ -111,8 +111,8 @@
                 android:text="@string/next_game"/>
 
             <Space
-                android:layout_width="20px"
-                android:layout_height="32px"
+                android:layout_width="20dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center" />
 
             <LinearLayout
@@ -131,8 +131,8 @@
                     android:id="@+id/sameSizeTextView" />
 
                 <Space
-                    android:layout_width="64px"
-                    android:layout_height="20px" />
+                    android:layout_width="64dp"
+                    android:layout_height="20dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
