@@ -95,8 +95,9 @@
         android:layout_height="match_parent"
         android:id="@+id/helpView"
         android:layout_gravity="center"
-        android:src="@drawable/ic_launcher"
+        android:src="@drawable/help"
         android:clickable="true"
-        android:onClick="closeHelp"/>
+        android:onClick="closeHelp"
+        android:scaleType="fitCenter" />
 
 </FrameLayout>
