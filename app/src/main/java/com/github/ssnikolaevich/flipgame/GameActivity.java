@@ -85,9 +85,9 @@ public class GameActivity extends Activity {
         final int columnsCount = game.getColumns();
         final int rowsCount = game.getRows();
 
+        mGameGrid.removeAllViews();
         mGameGrid.setColumnCount(columnsCount);
         mGameGrid.setRowCount(rowsCount);
-        mGameGrid.removeAllViews();
 
         TileViewFactory tileViewFactory = new TileViewFactory(this);
         for (int r = 0; r < rowsCount; ++r) {
@@ -163,7 +163,11 @@ public class GameActivity extends Activity {
     }
 
     public void onResetGame(View view) {
-        resetGame(game.getColumns(), game.getRows());
+        Intent intent = getIntent();
+        final int columnsCount = intent.getIntExtra(EXTRA_COLUMNS_COUNT, DEFAULT_COLUMNS);
+        final int rowsCount = intent.getIntExtra(EXTRA_ROWS_COUNT, DEFAULT_ROWS);
+
+        resetGame(columnsCount, rowsCount);
     }
 
     public void resetGame(int columnsCount, int rowsCount) {
