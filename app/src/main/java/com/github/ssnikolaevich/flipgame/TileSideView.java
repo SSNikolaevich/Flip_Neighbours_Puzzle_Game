@@ -1,6 +1,7 @@
 package com.github.ssnikolaevich.flipgame;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,9 +15,8 @@ import com.github.ssnikolaevich.flipgame.game.Value;
 public class TileSideView extends View {
     private Value value;
     private boolean isFront;
+    private Bitmap mBitmap;
     private Paint paint;
-    private Path path;
-    private RectF rect;
 
     private final static int BACKGROUND_COLOR = Color.argb(0, 255, 255, 255);
     private final static int FRONT_COLOR = Color.rgb(115, 210, 22);
@@ -50,8 +50,6 @@ public class TileSideView extends View {
         isFront = true;
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        path = new Path();
-        rect = new RectF();
     }
 
     public void setValue(Value value) {
@@ -72,29 +70,37 @@ public class TileSideView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        makeBitmap(w, h);
+    }
+
+    private void makeBitmap(int w, int h) {
+        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(mBitmap);
+        drawBackground(canvas, w, h);
+        drawTile(canvas, w, h);
+        drawValue(canvas, w, h);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawBackground(canvas);
-        drawTile(canvas);
-        drawValue(canvas);
+        if (mBitmap != null)
+            canvas.drawBitmap(mBitmap, 0, 0, paint);
     }
 
-    private void drawBackground(Canvas canvas) {
+    private void drawBackground(Canvas canvas, int w, int h) {
         paint.setColor(BACKGROUND_COLOR);
-        canvas.drawRect(0, 0, getWidth(), getHeight(), paint);
+        canvas.drawRect(0, 0, w, h, paint);
     }
 
-    private void drawTile(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawTile(Canvas canvas, int w, int h) {
         final float r = Math.min(w, h) / 5.0f;
         final float r2 = r / 8;
 
         // Create shape
-        rect.left = r2;
-        rect.top = r2;
-        rect.right = w - r2;
-        rect.bottom = h - r2;
+        RectF rect = new RectF(r2, r2, w - r2, h - r2);
 
         // Draw shadow
         rect.offset(shadowOffset, shadowOffset);
@@ -108,36 +114,31 @@ public class TileSideView extends View {
         canvas.drawRoundRect(rect, r, r, paint);
     }
 
-    private void drawValue(Canvas canvas) {
+    private void drawValue(Canvas canvas, int w, int h) {
         if (value.isOther()) {
-            drawValueOther(canvas);
+            drawValueOther(canvas, w, h);
         } else {
             if (value.isLeft()) {
-                drawValueLeft(canvas);
+                drawValueLeft(canvas, w, h);
             }
             if (value.isTop()) {
-                drawValueTop(canvas);
+                drawValueTop(canvas, w, h);
             }
             if (value.isBottom()) {
-                drawValueBottom(canvas);
+                drawValueBottom(canvas, w, h);
             }
             if (value.isRight()) {
-                drawValueRight(canvas);
+                drawValueRight(canvas, w, h);
             }
         }
     }
 
-    private void drawValueOther(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawValueOther(Canvas canvas, int w, int h) {
         final float s = Math.min(w, h) / 2.0f;
         final float r = s / 10.0f;
 
         // Create shape
-        rect.left = (w - s) / 2;
-        rect.top = (h - s) / 2;
-        rect.right = (w + s) / 2;
-        rect.bottom = (h + s) / 2;
+        RectF rect = new RectF((w - s) / 2, (h - s) / 2, (w + s) / 2, (h + s) / 2);
 
         // Draw shadow
         rect.offset(shadowOffset, shadowOffset);
@@ -150,14 +151,12 @@ public class TileSideView extends View {
         canvas.drawRoundRect(rect, r, r, paint);
     }
 
-    private void drawValueTop(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawValueTop(Canvas canvas, int w, int h) {
         final float s = Math.min(w, h) / 8.0f;
         final float r = s / 4.0f;
 
         // Create shape
-        path.rewind();
+        Path path = new Path();
         path.moveTo((w - r) / 2, s + r / 2);
         path.rQuadTo(r / 2, -r / 2, r, 0);
         path.rLineTo(s, s);
@@ -177,14 +176,12 @@ public class TileSideView extends View {
         canvas.drawPath(path, paint);
     }
 
-    private void drawValueBottom(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawValueBottom(Canvas canvas, int w, int h) {
         final float s = Math.min(w, h) / 8.0f;
         final float r = s / 4.0f;
 
         // Create shape
-        path.rewind();
+        Path path = new Path();
         path.moveTo((w - r) / 2, h - (s + r / 2));
         path.rQuadTo(r / 2, r / 2, r, 0);
         path.rLineTo(s, -s);
@@ -204,14 +201,12 @@ public class TileSideView extends View {
         canvas.drawPath(path, paint);
     }
 
-    private void drawValueLeft(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawValueLeft(Canvas canvas, int w, int h) {
         final float s = Math.min(w, h) / 8.0f;
         final float r = s / 4.0f;
 
         // Create shape
-        path.rewind();
+        Path path = new Path();
         path.moveTo(s + r / 2, (h - r) / 2);
         path.rQuadTo(-r / 2, r / 2, 0, r);
         path.rLineTo(s, s);
@@ -231,14 +226,12 @@ public class TileSideView extends View {
         canvas.drawPath(path, paint);
     }
 
-    private void drawValueRight(Canvas canvas) {
-        final int w = getWidth();
-        final int h = getHeight();
+    private void drawValueRight(Canvas canvas, int w, int h) {
         final float s = Math.min(w, h) / 8.0f;
         final float r = s / 4.0f;
 
         // Create shape
-        path.rewind();
+        Path path = new Path();
         path.moveTo(w - s - r / 2, (h - r) / 2);
         path.rQuadTo(r / 2, r / 2, 0, r);
         path.rLineTo(-s, s);
