@@ -20,8 +20,10 @@ public class TileViewFactory {
 
     public View create(Tile tile) {
         final ViewFlipper viewFlipper = new ViewFlipper(context);
+
         viewFlipper.setInAnimation(animationFlipIn);
         viewFlipper.setOutAnimation(animationFlipOut);
+
         TileSideView front = new TileSideView(context);
         TileSideView back = new TileSideView(context);
 
@@ -31,11 +33,10 @@ public class TileViewFactory {
         back.setValue(tile.get(Tile.BACK));
         back.setFront(false);
 
-        viewFlipper.addView(front);
-        viewFlipper.addView(back);
+        final boolean isFront = tile.getVisibleSide() == Tile.FRONT;
 
-        if (tile.getVisibleSide() == Tile.BACK)
-            viewFlipper.showNext();
+        viewFlipper.addView(isFront? front : back);
+        viewFlipper.addView(isFront? back : front);
 
         return viewFlipper;
     }
