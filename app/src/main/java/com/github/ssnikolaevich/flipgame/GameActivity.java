@@ -11,6 +11,8 @@ import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.github.ssnikolaevich.flipgame.game.Game;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 public class GameActivity extends Activity {
     public final static String EXTRA_COLUMNS_COUNT = "com.github.ssnikolaevich.flipgame.COLUMNS_COUNT";
@@ -29,6 +31,8 @@ public class GameActivity extends Activity {
     private TextView mSameSizeTextView;
     private TextView mNextSizeTextView;
 
+    private Animation mTileClickAnimation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,8 @@ public class GameActivity extends Activity {
 
         mSameSizeTextView = (TextView) findViewById(R.id.sameSizeTextView);
         mNextSizeTextView = (TextView) findViewById(R.id.nextSizeTextView);
+
+        mTileClickAnimation = AnimationUtils.loadAnimation(this, R.anim.tile_click);
 
         init();
     }
@@ -74,6 +80,7 @@ public class GameActivity extends Activity {
 
         @Override
         public void onClick(View view) {
+            view.startAnimation(mTileClickAnimation);
             game.makeMove(column, row);
             if (game.isOver()) {
                 onGameOver();
