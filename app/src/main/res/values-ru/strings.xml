@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Flip The Neighbours Puzzle Game</string>
+    <string name="share">Поделиться</string>
+    <string name="share_via">Поделиться с помощью…</string>
+    <string name="reset">Сброс</string>
+    <string name="help">Помощь</string>
+    <string name="share_msg_subject"></string>
+    <string name="share_msg_text"></string>
+    <string name="congratulations">ПОЗДРАВЛЯЕМ!</string>
+    <string name="you_win">Вы выиграли!</string>
+    <string name="next_game">Следующая игра:</string>
+
+</resources>
