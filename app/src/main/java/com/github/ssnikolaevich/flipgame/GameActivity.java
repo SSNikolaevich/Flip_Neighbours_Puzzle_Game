@@ -179,7 +179,7 @@ public class GameActivity extends Activity {
         resetGame(columnsCount, rowsCount);
     }
 
-    public void resetGame(int columnsCount, int rowsCount) {
+    public void resetGame(final int columnsCount, final int rowsCount) {
         mGameGrid.animate()
                 .alpha(0.0f)
                 .rotation(90.0f)
@@ -191,6 +191,8 @@ public class GameActivity extends Activity {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
+                                initGame(columnsCount, rowsCount);
+                                initGameView();
                                 mGameGrid.setRotation(-90.0f);
                                 mGameGrid.animate()
                                         .alpha(1.0f)
@@ -202,8 +204,6 @@ public class GameActivity extends Activity {
                             }
                         }
                 );
-        initGame(columnsCount, rowsCount);
-        initGameView();
     }
 
     protected void onGameOver() {
