@@ -32,6 +32,7 @@ public class GameActivity extends Activity {
     private TextView mNextSizeTextView;
 
     private Animation mTileClickAnimation;
+    private Animation mNewSizeAccentAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class GameActivity extends Activity {
         mNextSizeTextView = (TextView) findViewById(R.id.nextSizeTextView);
 
         mTileClickAnimation = AnimationUtils.loadAnimation(this, R.anim.tile_click);
+        mNewSizeAccentAnimation = AnimationUtils.loadAnimation(this, R.anim.new_size_accent);
 
         init();
     }
@@ -220,7 +222,13 @@ public class GameActivity extends Activity {
                 .scaleX(1.0f)
                 .scaleY(1.0f)
                 .setDuration(250)
-                .setListener(null);
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mNextSizeTextView.startAnimation(mNewSizeAccentAnimation);
+                    }
+                });
     }
 
     public void showHelp(View view) {
