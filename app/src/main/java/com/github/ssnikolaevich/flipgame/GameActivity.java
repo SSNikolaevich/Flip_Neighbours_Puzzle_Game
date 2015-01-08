@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.content.Intent;
 import android.view.View;
 import android.widget.GridLayout;
@@ -134,7 +133,6 @@ public class GameActivity extends Activity {
                             params.height = tileSize;
                             child.setLayoutParams(params);
                         }
-                        Log.d("GameActivity", "Tile size: " + tileSize);
                         if (tileSize > 0)
                             view.removeOnLayoutChangeListener(this);
                     }
@@ -302,5 +300,20 @@ public class GameActivity extends Activity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, msgSubject);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, msgText);
         startActivity(Intent.createChooser(sharingIntent, shareCaption));
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        game = new Game(savedInstanceState);
+        initGameView();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        game.saveState(savedInstanceState);
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

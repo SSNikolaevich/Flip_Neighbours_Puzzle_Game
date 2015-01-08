@@ -15,6 +15,29 @@ public class Value {
         mOther = false;
     }
 
+    public Value(int v) {
+        mOther = (v & 1) != 0;
+        mLeft = (v & 2) != 0;
+        mRight = (v & 4) != 0;
+        mTop = (v & 8) != 0;
+        mBottom = (v & 16) != 0;
+    }
+
+    public int asInt() {
+        int v = 0;
+        if (mOther)
+            v |= 1;
+        if (mLeft)
+            v |= 2;
+        if (mRight)
+            v |= 4;
+        if (mTop)
+            v |= 8;
+        if (mBottom)
+            v |= 16;
+        return v;
+    }
+
     public boolean isLeft() {
         return mLeft;
     }

@@ -1,7 +1,12 @@
 package com.github.ssnikolaevich.flipgame.game;
+
 import java.util.*;
+import android.os.Bundle;
+import android.util.Size;
 
 public class Game {
+    static final String STATE_DATA = "gameData";
+
     private Layout mLayout;
     private OnTileFlipListener onTileFlipListener;
 
@@ -9,6 +14,16 @@ public class Game {
         mLayout = new Layout(columns, rows);
         onTileFlipListener = null;
         initLayout();
+    }
+
+    public Game(Bundle savedState) {
+        ArrayList<Integer> data = savedState.getIntegerArrayList(STATE_DATA);
+        Iterator<Integer> iter = data.iterator();
+        int columns = iter.next().intValue();
+        int rows = iter.next().intValue();
+        mLayout = new Layout(columns, rows);
+        onTileFlipListener = null;
+        loadLayout(iter);
     }
 
     private void initLayout() {
@@ -27,6 +42,19 @@ public class Game {
             int column = random.nextInt(columns);
             int row = random.nextInt(rows);
             makeMove(column, row);
+        }
+    }
+
+    private void loadLayout(Iterator<Integer> iter) {
+        int columns = mLayout.getColumns();
+        int rows = mLayout.getRows();
+        for (int c = 0; c < columns; ++c) {
+            for (int r = 0; r < rows; ++r) {
+                Tile tile = mLayout.getTile(c, r);
+                tile.setFront(new Value(iter.next().intValue()));
+                tile.setBack(new Value(iter.next().intValue()));
+                tile.setVisibleSide(iter.next().intValue());
+            }
         }
     }
 
@@ -115,5 +143,26 @@ public class Game {
 
     public interface OnTileFlipListener {
         public void onFlip(Game game, int column, int row);
+    }
+
+    public void saveState(Bundle savedState) {
+        ArrayList<Integer> data = new ArrayList<>();
+        data.add(new Integer(getColumns()));
+        data.add(new Integer(getRows()));
+        saveLayoutData(data);
+        savedState.putIntegerArrayList(STATE_DATA, data);
+    }
+
+    private void saveLayoutData(ArrayList<Integer> data) {
+        int columns = mLayout.getColumns();
+        int rows = mLayout.getRows();
+        for (int c = 0; c < columns; ++c) {
+            for (int r = 0; r < rows; ++r) {
+                Tile tile = mLayout.getTile(c, r);
+                data.add(new Integer(tile.getFront().asInt()));
+                data.add(new Integer(tile.getBack().asInt()));
+                data.add(new Integer(tile.getVisibleSide()));
+            }
+        }
     }
 }
