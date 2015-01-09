@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias System.getenv("ANDROID_KEY_ALIAS")
+            keyPassword System.getenv("ANDROID_KEY_PASSWD")
+            storeFile file(System.getenv("ANDROID_KEY_STORE_FILE"))
+            storePassword System.getenv("ANDROID_KEY_STORE_PASSWD")
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "19.1.0"
-
     defaultConfig {
         applicationId "com.github.ssnikolaevich.flipgame"
         minSdkVersion 15
@@ -15,6 +22,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
