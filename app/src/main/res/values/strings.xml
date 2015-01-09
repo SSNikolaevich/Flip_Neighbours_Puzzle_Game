@@ -6,10 +6,14 @@
     <string name="share_via">Share via</string>
     <string name="reset">Reset</string>
     <string name="help">Help</string>
-    <string name="share_msg_subject"></string>
-    <string name="share_msg_text"></string>
+    <string name="share_msg_subject">New interesting puzzle game for Android</string>
+    <string name="share_msg_text">New interesting puzzle game for Android
+        http://play.google.com/store/apps/details?id=com.github.ssnikolaevich.flipgame</string>
     <string name="congratulations">CONGRATULATIONS!</string>
     <string name="you_win">You win!</string>
     <string name="next_game">Next game:</string>
+
+    <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id. -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
 </resources>

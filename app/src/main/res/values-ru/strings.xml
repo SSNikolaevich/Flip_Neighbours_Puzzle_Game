@@ -6,10 +6,13 @@
     <string name="share_via">Поделиться с помощью…</string>
     <string name="reset">Сброс</string>
     <string name="help">Помощь</string>
-    <string name="share_msg_subject"></string>
-    <string name="share_msg_text"></string>
+    <string name="share_msg_subject">Новая увлекательная игра-головоломка для Android</string>
+    <string name="share_msg_text">Новая увлекательная игра-головоломка для Android
+        http://play.google.com/store/apps/details?id=com.github.ssnikolaevich.flipgame</string>
     <string name="congratulations">ПОЗДРАВЛЯЕМ!</string>
     <string name="you_win">Вы выиграли!</string>
     <string name="next_game">Следующая игра:</string>
 
+    <!-- This is an ad unit ID for a test ad. Replace with your own banner ad unit id. -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

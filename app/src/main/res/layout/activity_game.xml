@@ -51,6 +51,13 @@
             android:layout_gravity="center"
             android:stretchMode="columnWidth" />
 
+        <fragment
+            android:id="@+id/adFragment"
+            android:name="com.github.ssnikolaevich.flipgame.GameActivity$AdFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/shareTextView" />
+
         <TextView
             android:id="@+id/shareTextView"
             android:layout_width="wrap_content"
