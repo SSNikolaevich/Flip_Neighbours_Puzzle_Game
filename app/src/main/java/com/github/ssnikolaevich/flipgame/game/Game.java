@@ -147,8 +147,8 @@ public class Game {
 
     public void saveState(Bundle savedState) {
         ArrayList<Integer> data = new ArrayList<>();
-        data.add(new Integer(getColumns()));
-        data.add(new Integer(getRows()));
+        data.add(Integer.valueOf(getColumns()));
+        data.add(Integer.valueOf(getRows()));
         saveLayoutData(data);
         savedState.putIntegerArrayList(STATE_DATA, data);
     }
@@ -159,9 +159,9 @@ public class Game {
         for (int c = 0; c < columns; ++c) {
             for (int r = 0; r < rows; ++r) {
                 Tile tile = mLayout.getTile(c, r);
-                data.add(new Integer(tile.getFront().asInt()));
-                data.add(new Integer(tile.getBack().asInt()));
-                data.add(new Integer(tile.getVisibleSide()));
+                data.add(Integer.valueOf(tile.getFront().asInt()));
+                data.add(Integer.valueOf(tile.getBack().asInt()));
+                data.add(Integer.valueOf(tile.getVisibleSide()));
             }
         }
     }
