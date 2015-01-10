@@ -1,6 +1,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.sergey.myapplication.GameActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -51,11 +52,14 @@
             android:layout_gravity="center"
             android:stretchMode="columnWidth" />
 
-        <fragment
-            android:id="@+id/adFragment"
-            android:name="com.github.ssnikolaevich.flipgame.GameActivity$AdFragment"
-            android:layout_width="match_parent"
+        <!--ads:adUnitId sets the ad unit ID, which is defined in values/strings.xml -->
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
             android:layout_above="@+id/shareTextView" />
 
         <TextView

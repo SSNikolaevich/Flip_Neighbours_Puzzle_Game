@@ -2,10 +2,9 @@ package com.github.ssnikolaevich.flipgame;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import com.google.android.gms.ads.AdView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-public class GameActivity extends FragmentActivity {
+public class GameActivity extends Activity {
     public final static String EXTRA_COLUMNS_COUNT = "com.github.ssnikolaevich.flipgame.COLUMNS_COUNT";
     public final static String EXTRA_ROWS_COUNT = "com.github.ssnikolaevich.flipgame.ROWS_COUNT";
 
@@ -38,6 +37,8 @@ public class GameActivity extends FragmentActivity {
 
     private Animation mTileClickAnimation;
     private Animation mNewSizeAccentAnimation;
+
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,21 @@ public class GameActivity extends FragmentActivity {
 
         mTileClickAnimation = AnimationUtils.loadAnimation(this, R.anim.tile_click);
         mNewSizeAccentAnimation = AnimationUtils.loadAnimation(this, R.anim.new_size_accent);
+
+        // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
+        // values/strings.xml.
+        mAdView = (AdView) findViewById(R.id.adView);
+
+        // Create an ad request. Check logcat output for the hashed device ID to
+        // get test ads on a physical device. e.g.
+        // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("0818886d")
+                .build();
+
+        // Start loading the ad in the background.
+        mAdView.loadAd(adRequest);
 
         init();
     }
@@ -186,9 +202,9 @@ public class GameActivity extends FragmentActivity {
     public void resetGame(final int columnsCount, final int rowsCount) {
         mGameGrid.animate()
                 .alpha(0.0f)
-                .rotation(90.0f)
-                .scaleX(0.25f)
-                .scaleY(0.25f)
+                .rotation(45.0f)
+                .scaleX(0.0f)
+                .scaleY(0.0f)
                 .setDuration(250)
                 .setListener(
                         new AnimatorListenerAdapter() {
@@ -197,7 +213,7 @@ public class GameActivity extends FragmentActivity {
                                 super.onAnimationEnd(animation);
                                 initGame(columnsCount, rowsCount);
                                 initGameView();
-                                mGameGrid.setRotation(-90.0f);
+                                mGameGrid.setRotation(-45.0f);
                                 mGameGrid.animate()
                                         .alpha(1.0f)
                                         .rotation(0.0f)
@@ -323,64 +339,30 @@ public class GameActivity extends FragmentActivity {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-    public static class AdFragment extends Fragment {
-
-        private AdView mAdView;
-
-        public AdFragment() {
+    /** Called when leaving the activity */
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
         }
+        super.onPause();
+    }
 
-        @Override
-        public void onActivityCreated(Bundle bundle) {
-            super.onActivityCreated(bundle);
-
-            // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
-            // values/strings.xml.
-            mAdView = (AdView) getView().findViewById(R.id.adView);
-
-            // Create an ad request. Check logcat output for the hashed device ID to
-            // get test ads on a physical device. e.g.
-            // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("0818886d")
-                    .build();
-
-            // Start loading the ad in the background.
-            mAdView.loadAd(adRequest);
+    /** Called when returning to the activity */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
         }
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_ad, container, false);
+    /** Called before the activity is destroyed */
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
         }
-
-        /** Called when leaving the activity */
-        @Override
-        public void onPause() {
-            if (mAdView != null) {
-                mAdView.pause();
-            }
-            super.onPause();
-        }
-
-        /** Called when returning to the activity */
-        @Override
-        public void onResume() {
-            super.onResume();
-            if (mAdView != null) {
-                mAdView.resume();
-            }
-        }
-
-        /** Called before the activity is destroyed */
-        @Override
-        public void onDestroy() {
-            if (mAdView != null) {
-                mAdView.destroy();
-            }
-            super.onDestroy();
-        }
+        super.onDestroy();
     }
 }
