@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Flip The Neighbours Puzzle Game</string>
+    <string name="app_name">Переворачивающиеся плитки</string>
     <string name="share">Поделиться</string>
     <string name="share_via">Поделиться с помощью…</string>
     <string name="reset">Сброс</string>
