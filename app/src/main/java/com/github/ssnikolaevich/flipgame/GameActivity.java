@@ -40,6 +40,8 @@ public class GameActivity extends Activity {
 
     private AdView mAdView;
 
+    private int mGameViewWidth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,8 @@ public class GameActivity extends Activity {
         mTileClickAnimation = AnimationUtils.loadAnimation(this, R.anim.tile_click);
         mNewSizeAccentAnimation = AnimationUtils.loadAnimation(this, R.anim.new_size_accent);
 
+        mGameViewWidth = 0;
+
         // Gets the ad view defined in layout/ad_fragment.xml with ad unit ID set in
         // values/strings.xml.
         mAdView = (AdView) findViewById(R.id.adView);
@@ -71,6 +75,7 @@ public class GameActivity extends Activity {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .addTestDevice("0818886d")
+                .addTestDevice("11611862615")
                 .build();
 
         // Start loading the ad in the background.
@@ -137,29 +142,39 @@ public class GameActivity extends Activity {
             }
         });
 
-        mGameView.addOnLayoutChangeListener(
-                new View.OnLayoutChangeListener() {
-                    @Override
-                    public void onLayoutChange(
-                            View view,
-                            int left, int top, int right, int bottom,
-                            int oldLeft, int oldTop, int oldRight, int oldBottom
-                    ) {
-                        int tileSize = (right - left) / columnsCount;
-
-                        for (int i = 0; i < mGameGrid.getChildCount(); ++i) {
-                            View child = mGameGrid.getChildAt(i);
-                            GridLayout.LayoutParams params =
-                                    (GridLayout.LayoutParams) child.getLayoutParams();
-                            params.width = tileSize;
-                            params.height = tileSize;
-                            child.setLayoutParams(params);
+        if (mGameViewWidth == 0) {
+            mGameView.addOnLayoutChangeListener(
+                    new View.OnLayoutChangeListener() {
+                        @Override
+                        public void onLayoutChange(
+                                View view,
+                                int left, int top, int right, int bottom,
+                                int oldLeft, int oldTop, int oldRight, int oldBottom
+                        ) {
+                            if (mGameViewWidth == 0)
+                                mGameViewWidth = right - left;
+                            if (mGameViewWidth > 0) {
+                                resizeTiles();
+                                view.removeOnLayoutChangeListener(this);
+                            }
                         }
-                        if (tileSize > 0)
-                            view.removeOnLayoutChangeListener(this);
                     }
-                }
-        );
+            );
+        } else {
+            resizeTiles();
+        }
+    }
+
+    private void resizeTiles() {
+        int tileSize = mGameViewWidth / mGameGrid.getColumnCount();
+        for (int i = 0; i < mGameGrid.getChildCount(); ++i) {
+            View child = mGameGrid.getChildAt(i);
+            GridLayout.LayoutParams params =
+                    (GridLayout.LayoutParams) child.getLayoutParams();
+            params.width = tileSize;
+            params.height = tileSize;
+            child.setLayoutParams(params);
+        }
     }
 
     public void startSameSizeGame(View view) {
