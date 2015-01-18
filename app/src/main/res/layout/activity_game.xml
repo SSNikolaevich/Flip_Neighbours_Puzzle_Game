@@ -155,6 +155,21 @@
                     android:id="@+id/nextSizeTextView" />
             </LinearLayout>
 
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/rate_this_app"
+                android:clickable="true"
+                android:onClick="rateThisApp"
+                android:textColor="#ad7fa8"
+                android:id="@+id/rateThisAppTextView" />
+
         </LinearLayout>
 
     </RelativeLayout>

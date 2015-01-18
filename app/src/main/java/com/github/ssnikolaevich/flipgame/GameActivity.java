@@ -3,6 +3,8 @@ package com.github.ssnikolaevich.flipgame;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import com.github.ssnikolaevich.flipgame.game.Game;
 import com.google.android.gms.ads.AdRequest;
@@ -185,6 +188,21 @@ public class GameActivity extends Activity {
     public void startNextSizeGame(View view) {
         animateNewGame();
         resetGame(game.getColumns() + 1, game.getRows() + 1);
+    }
+
+    public void rateThisApp(View view) {
+        try
+        {
+            startActivity(
+                new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + getPackageName())
+                )
+            );
+        } catch (ActivityNotFoundException e) {
+            String message = getResources().getString(R.string.no_play_store_installed);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void animateNewGame() {

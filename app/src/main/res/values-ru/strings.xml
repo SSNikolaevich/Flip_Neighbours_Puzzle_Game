@@ -12,6 +12,8 @@
     <string name="congratulations">ПОЗДРАВЛЯЕМ!</string>
     <string name="you_win">Вы выиграли!</string>
     <string name="next_game">Следующая игра:</string>
+    <string name="rate_this_app">Оценить приложение</string>
+    <string name="no_play_store_installed">Приложение Play Маркет не установлено</string>
 
     <!-- This is an ad unit ID for a test ad. -->
     <string name="banner_ad_unit_id">ca-app-pub-7686582063541641/3390835016</string>

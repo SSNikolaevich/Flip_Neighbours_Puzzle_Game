@@ -12,6 +12,8 @@
     <string name="congratulations">CONGRATULATIONS!</string>
     <string name="you_win">You win!</string>
     <string name="next_game">Next game:</string>
+    <string name="rate_this_app">Rate this app</string>
+    <string name="no_play_store_installed">No Play Store installed on device</string>
 
     <!-- This is an ad unit ID for a test ad. -->
     <string name="banner_ad_unit_id">ca-app-pub-7686582063541641/3390835016</string>
