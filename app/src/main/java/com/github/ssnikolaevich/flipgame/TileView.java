@@ -1,24 +1,32 @@
 package com.github.ssnikolaevich.flipgame;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import com.github.ssnikolaevich.flipgame.game.Tile;
 import com.github.ssnikolaevich.flipgame.game.Value;
 
 
-public class TileSideView extends View {
-    private Value value;
+public class TileView extends View {
+    private Tile tile;
     private boolean isFront;
-    private Bitmap mBitmap;
+    private Bitmap frontBitmap;
+    private Bitmap backBitmap;
     private Paint paint;
 
-    private final static int BACKGROUND_COLOR = Color.argb(0, 255, 255, 255);
+    private AnimatorSet flipInAnimator;
+    private AnimatorSet flipOutAnimator;
+
     private final static int FRONT_COLOR = Color.rgb(115, 210, 22);
     private final static int BACK_COLOR = Color.rgb(245, 121, 0);
     private final static int VALUE_COLOR = Color.rgb(255, 255, 255);
@@ -26,38 +34,55 @@ public class TileSideView extends View {
 
     private final static float shadowOffset = 4.0f;
 
-    public TileSideView(Context context) {
+    public TileView(Context context) {
         super(context);
-        init(null, 0);
+        init(context, null, 0);
     }
 
-    public TileSideView(Context context, AttributeSet attrs) {
+    public TileView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init(context, attrs, 0);
     }
 
-    public TileSideView(Context context, AttributeSet attrs, int defStyle) {
+    public TileView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs, defStyle);
+        init(context, attrs, defStyle);
     }
 
-    private void init(AttributeSet attrs, int defStyle) {
-        value = new Value();
-        value.setLeft(true);
-        value.setRight(true);
-        value.setTop(true);
-        value.setBottom(true);
-        isFront = true;
-
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        tile = new Tile();
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        frontBitmap = null;
+        backBitmap = null;
+
+        flipOutAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(
+                context,
+                R.anim.flipout
+        );
+        flipInAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(
+                context,
+                R.anim.flipin
+        );
+        flipInAnimator.setTarget(this);
+        flipOutAnimator.setTarget(this);
+        flipInAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isFront = !isFront;
+                postInvalidate();
+                flipOutAnimator.start();
+            }
+        });
     }
 
-    public void setValue(Value value) {
-        this.value = value;
+    public void setTile(Tile tile) {
+        this.tile = tile;
+        isFront = tile.getVisibleSide() == Tile.FRONT;
     }
 
-    public void setFront(boolean isFront) {
-        this.isFront = isFront;
+    public void flip() {
+        flipInAnimator.start();
     }
 
     @Override
@@ -72,30 +97,31 @@ public class TileSideView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        makeBitmap(w, h);
+        makeBitmaps(w, h);
     }
 
-    private void makeBitmap(int w, int h) {
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(mBitmap);
-        drawBackground(canvas, w, h);
-        drawTile(canvas, w, h);
-        drawValue(canvas, w, h);
+    private void makeBitmaps(int w, int h) {
+        frontBitmap = makeBitmap(w, h, tile.getFront(), true);
+        backBitmap = makeBitmap(w, h, tile.getBack(), false);
+    }
+
+    private Bitmap makeBitmap(int w, int h, Value value, boolean isFront) {
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawTile(canvas, w, h, isFront);
+        drawValue(canvas, w, h, value);
+        return bitmap;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mBitmap != null)
-            canvas.drawBitmap(mBitmap, 0, 0, paint);
+        Bitmap bitmap = isFront? frontBitmap : backBitmap;
+        if (bitmap != null)
+            canvas.drawBitmap(bitmap, 0, 0, paint);
     }
 
-    private void drawBackground(Canvas canvas, int w, int h) {
-        paint.setColor(BACKGROUND_COLOR);
-        canvas.drawRect(0, 0, w, h, paint);
-    }
-
-    private void drawTile(Canvas canvas, int w, int h) {
+    private void drawTile(Canvas canvas, int w, int h, boolean isFront) {
         final float r = Math.min(w, h) / 5.0f;
         final float r2 = r / 8;
 
@@ -114,7 +140,7 @@ public class TileSideView extends View {
         canvas.drawRoundRect(rect, r, r, paint);
     }
 
-    private void drawValue(Canvas canvas, int w, int h) {
+    private void drawValue(Canvas canvas, int w, int h, Value value) {
         if (value.isOther()) {
             drawValueOther(canvas, w, h);
         } else {
@@ -250,4 +276,5 @@ public class TileSideView extends View {
         paint.setColor(VALUE_COLOR);
         canvas.drawPath(path, paint);
     }
+
 }

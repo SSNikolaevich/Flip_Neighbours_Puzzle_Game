@@ -8,7 +8,7 @@ public class Tile {
     private Value mBack;
     private int mSide;
 
-    Tile() {
+    public Tile() {
         mFront = new Value();
         mBack = new Value();
         mSide = FRONT;

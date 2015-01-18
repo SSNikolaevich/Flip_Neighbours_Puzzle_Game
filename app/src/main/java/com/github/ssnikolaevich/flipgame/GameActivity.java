@@ -124,10 +124,10 @@ public class GameActivity extends Activity {
         mGameGrid.setColumnCount(columnsCount);
         mGameGrid.setRowCount(rowsCount);
 
-        TileViewFactory tileViewFactory = new TileViewFactory(this);
         for (int r = 0; r < rowsCount; ++r) {
             for (int c = 0; c < columnsCount; ++c) {
-                View view = tileViewFactory.create(game.getTile(c, r));
+                TileView view = new TileView(this);
+                view.setTile(game.getTile(c, r));
                 view.setOnClickListener(new TileOnClickListener(c, r));
                 mGameGrid.addView(view);
             }
@@ -136,9 +136,9 @@ public class GameActivity extends Activity {
         game.setOnTileFlipListener(new Game.OnTileFlipListener() {
             @Override
             public void onFlip(Game game, int column, int row) {
-                ViewFlipper view =
-                        (ViewFlipper) mGameGrid.getChildAt(game.getColumns() * row + column);
-                view.showNext();
+                TileView view =
+                        (TileView) mGameGrid.getChildAt(game.getColumns() * row + column);
+                view.flip();
             }
         });
 
