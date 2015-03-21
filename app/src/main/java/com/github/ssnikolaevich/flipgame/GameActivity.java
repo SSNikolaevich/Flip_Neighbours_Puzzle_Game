@@ -4,12 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +47,8 @@ public class GameActivity extends Activity {
     private AdView mAdView;
 
     private int mGameViewWidth;
+
+    private int displaySize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,12 @@ public class GameActivity extends Activity {
 
         // Start loading the ad in the background.
         mAdView.loadAd(adRequest);
+
+        // Gets the display size.
+        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        displaySize = Math.min(p.x, p.y);
 
         init();
     }
@@ -127,9 +138,12 @@ public class GameActivity extends Activity {
         mGameGrid.setColumnCount(columnsCount);
         mGameGrid.setRowCount(rowsCount);
 
+        final int maxTileSize = displaySize / Math.max(columnsCount, rowsCount);
+
         for (int r = 0; r < rowsCount; ++r) {
             for (int c = 0; c < columnsCount; ++c) {
                 TileView view = new TileView(this);
+                view.setMaxTileSize(maxTileSize);
                 view.setTile(game.getTile(c, r));
                 view.setOnClickListener(new TileOnClickListener(c, r));
                 mGameGrid.addView(view);

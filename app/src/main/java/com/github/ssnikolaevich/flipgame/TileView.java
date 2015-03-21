@@ -27,6 +27,8 @@ public class TileView extends View {
     private AnimatorSet flipInAnimator;
     private AnimatorSet flipOutAnimator;
 
+    private int maxTileSize;
+
     private final static int FRONT_COLOR = Color.rgb(115, 210, 22);
     private final static int BACK_COLOR = Color.rgb(245, 121, 0);
     private final static int VALUE_COLOR = Color.rgb(255, 255, 255);
@@ -74,6 +76,12 @@ public class TileView extends View {
                 flipOutAnimator.start();
             }
         });
+
+        maxTileSize = 0;
+    }
+
+    public void setMaxTileSize(int size) {
+        maxTileSize = size;
     }
 
     public void setTile(Tile tile) {
@@ -90,7 +98,7 @@ public class TileView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
-        int size = (width > height)? height : width;
+        int size = Math.min(maxTileSize, (width > height)? height : width);
         setMeasuredDimension(size, size);
     }
 
