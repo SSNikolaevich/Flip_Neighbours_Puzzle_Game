@@ -8,15 +8,13 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 import com.github.ssnikolaevich.flipgame.game.Game;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -122,10 +120,12 @@ public class GameActivity extends Activity {
 
         @Override
         public void onClick(View view) {
-            view.startAnimation(mTileClickAnimation);
-            game.makeMove(column, row);
-            if (game.isOver()) {
-                onGameOver();
+            if (mGameGrid.isEnabled()) {
+                view.startAnimation(mTileClickAnimation);
+                game.makeMove(column, row);
+                if (game.isOver()) {
+                    onGameOver();
+                }
             }
         }
     }
@@ -137,8 +137,23 @@ public class GameActivity extends Activity {
         mGameGrid.removeAllViews();
         mGameGrid.setColumnCount(columnsCount);
         mGameGrid.setRowCount(rowsCount);
+        mGameGrid.setEnabled(true);
 
         final int maxTileSize = displaySize / Math.max(columnsCount, rowsCount);
+
+        Animator.AnimatorListener tileAnimatorListener = new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mGameGrid.setEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mGameGrid.setEnabled(true);
+            }
+        };
 
         for (int r = 0; r < rowsCount; ++r) {
             for (int c = 0; c < columnsCount; ++c) {
@@ -146,6 +161,7 @@ public class GameActivity extends Activity {
                 view.setMaxTileSize(maxTileSize);
                 view.setTile(game.getTile(c, r));
                 view.setOnClickListener(new TileOnClickListener(c, r));
+                view.setAnimatorListener(tileAnimatorListener);
                 mGameGrid.addView(view);
             }
         }
@@ -372,7 +388,7 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         game = new Game(savedInstanceState);
@@ -380,7 +396,7 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         game.saveState(savedInstanceState);
 
         super.onSaveInstanceState(savedInstanceState);

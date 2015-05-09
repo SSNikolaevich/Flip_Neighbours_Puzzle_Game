@@ -13,6 +13,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+
 import com.github.ssnikolaevich.flipgame.game.Tile;
 import com.github.ssnikolaevich.flipgame.game.Value;
 
@@ -26,6 +27,8 @@ public class TileView extends View {
 
     private AnimatorSet flipInAnimator;
     private AnimatorSet flipOutAnimator;
+
+    private Animator.AnimatorListener animatorListener;
 
     private int maxTileSize;
 
@@ -57,6 +60,7 @@ public class TileView extends View {
         frontBitmap = null;
         backBitmap = null;
 
+        animatorListener = null;
         flipOutAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(
                 context,
                 R.anim.flipout
@@ -69,6 +73,12 @@ public class TileView extends View {
         flipOutAnimator.setTarget(this);
         flipInAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                animatorListener.onAnimationStart(animation);
+            }
+
+            @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 isFront = !isFront;
@@ -76,8 +86,19 @@ public class TileView extends View {
                 flipOutAnimator.start();
             }
         });
+        flipOutAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                animatorListener.onAnimationEnd(animation);
+            }
+        });
 
         maxTileSize = 0;
+    }
+
+    public void setAnimatorListener(Animator.AnimatorListener listener) {
+        animatorListener = listener;
     }
 
     public void setMaxTileSize(int size) {
