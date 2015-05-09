@@ -10,7 +10,7 @@ public class Layout {
     public Layout(int columns, int rows) {
         mColumns = columns;
         mRows = rows;
-        mTiles = new ArrayList<Tile>();
+        mTiles = new ArrayList<>();
         for (int c = 0; c < mColumns; ++c) {
             for (int r = 0; r < mRows; ++r) {
                 mTiles.add(new Tile());

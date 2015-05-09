@@ -2,7 +2,6 @@ package com.github.ssnikolaevich.flipgame.game;
 
 import java.util.*;
 import android.os.Bundle;
-import android.util.Size;
 
 public class Game {
     static final String STATE_DATA = "gameData";
@@ -19,8 +18,8 @@ public class Game {
     public Game(Bundle savedState) {
         ArrayList<Integer> data = savedState.getIntegerArrayList(STATE_DATA);
         Iterator<Integer> iter = data.iterator();
-        int columns = iter.next().intValue();
-        int rows = iter.next().intValue();
+        int columns = iter.next();
+        int rows = iter.next();
         mLayout = new Layout(columns, rows);
         onTileFlipListener = null;
         loadLayout(iter);
@@ -51,9 +50,9 @@ public class Game {
         for (int c = 0; c < columns; ++c) {
             for (int r = 0; r < rows; ++r) {
                 Tile tile = mLayout.getTile(c, r);
-                tile.setFront(new Value(iter.next().intValue()));
-                tile.setBack(new Value(iter.next().intValue()));
-                tile.setVisibleSide(iter.next().intValue());
+                tile.setFront(new Value(iter.next()));
+                tile.setBack(new Value(iter.next()));
+                tile.setVisibleSide(iter.next());
             }
         }
     }
@@ -147,8 +146,8 @@ public class Game {
 
     public void saveState(Bundle savedState) {
         ArrayList<Integer> data = new ArrayList<>();
-        data.add(Integer.valueOf(getColumns()));
-        data.add(Integer.valueOf(getRows()));
+        data.add(getColumns());
+        data.add(getRows());
         saveLayoutData(data);
         savedState.putIntegerArrayList(STATE_DATA, data);
     }
@@ -159,9 +158,9 @@ public class Game {
         for (int c = 0; c < columns; ++c) {
             for (int r = 0; r < rows; ++r) {
                 Tile tile = mLayout.getTile(c, r);
-                data.add(Integer.valueOf(tile.getFront().asInt()));
-                data.add(Integer.valueOf(tile.getBack().asInt()));
-                data.add(Integer.valueOf(tile.getVisibleSide()));
+                data.add(tile.getFront().asInt());
+                data.add(tile.getBack().asInt());
+                data.add(tile.getVisibleSide());
             }
         }
     }
